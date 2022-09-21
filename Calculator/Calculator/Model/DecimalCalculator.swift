@@ -10,10 +10,10 @@ final class DecimalCalculator: Computable {
     
     static func add(firstNumber: String, secondNumber: String) -> String {
         do {
-            let first = try formatInput(firstNumber)
-            let second = try formatInput(secondNumber)
+            let first = try formattedInput(of: firstNumber)
+            let second = try formattedInput(of: secondNumber)
             let result = round(Double(first + second) * 1e9) / 1e9
-            return try formatResult(of: result)
+            return try formattedResult(of: result)
         } catch {
             //FIXME: 에러 받으면? 어떻게 할건지
             return "-1"
@@ -22,10 +22,10 @@ final class DecimalCalculator: Computable {
     
     static func subtract(firstNumber: String, secondNumber: String) -> String {
         do {
-            let first = try formatInput(firstNumber)
-            let second = try formatInput(secondNumber)
+            let first = try formattedInput(of: firstNumber)
+            let second = try formattedInput(of: secondNumber)
             let result = round(Double(first - second) * 1e9) / 1e9
-            return try formatResult(of: result)
+            return try formattedResult(of: result)
         } catch {
             return "-1"
         }
@@ -33,10 +33,10 @@ final class DecimalCalculator: Computable {
     
     static func multiply(firstNumber: String, secondNumber: String) -> String {
         do {
-            let first = try formatInput(firstNumber)
-            let second = try formatInput(secondNumber)
+            let first = try formattedInput(of: firstNumber)
+            let second = try formattedInput(of: secondNumber)
             let result = round(Double(first * second) * 1e9) / 1e9
-            return try formatResult(of: result)
+            return try formattedResult(of: result)
         } catch {
             return "-1"
         }
@@ -45,24 +45,24 @@ final class DecimalCalculator: Computable {
     static func divide(firstNumber: String, secondNumber: String) -> String {
         
         do {
-            let first = try formatInput(firstNumber)
-            let second = try formatInput(secondNumber)
+            let first = try formattedInput(of: firstNumber)
+            let second = try formattedInput(of: secondNumber)
             let result = round(Double(first / second) * 1e9) / 1e9
-            return try formatResult(of: result)
+            return try formattedResult(of: result)
         } catch {
             return "-1"
         }
         
     }
     
-    static func formatInput(_ userInput: String) throws -> Double {
+    static func formattedInput(of userInput: String) throws -> Double {
         guard let input = Double(userInput) else {
             throw CalculatorError.formatError
         }
         return input
     }
     
-    static func formatResult(of result: Double) throws -> String {
+    static func formattedResult(of result: Double) throws -> String {
         var result = result
         
         if result >= 1e9 {

@@ -119,8 +119,8 @@ class ViewController: UIViewController {
     @IBAction func touchUpToggleSign(_ sender: Any) {
         do {
             if decimalMode {
-                let minusedInput = try DecimalCalculator.formatInput(numberField.text!) * -1
-                numberField.text = try DecimalCalculator.formatResult(of: minusedInput)
+                let minusedInput = try DecimalCalculator.formattedInput(of: numberField.text!) * -1
+                numberField.text = try DecimalCalculator.formattedResult(of: minusedInput)
             } else {
                 let minusedInput = try BinaryCalculator.formatInput(numberField.text!) * -1
                 numberField.text = try BinaryCalculator.formatResult(of: minusedInput)
