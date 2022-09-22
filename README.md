@@ -67,3 +67,54 @@ override한 메서드는 super 클래스의 원래 메서드를 호출한 뒤에
 
 
 
+## 프로젝트를 진행하며 했던 고민들
+
+#### 10진수 계산기와 2진수 계산기를 하나로 합칠수는 없을까?
+
+10진수 계산기와 2진수 계산기는 얼핏보기엔 비슷한 인터페이스의 메서드를 많이 가지고 있다.
+
+하지만 10진수의 계산결과 포맷팅 로직과 2진수의 계산결과 포맷팅 로직이 다르며 둘을 합치는것이 큰 이점을 주지 않을 것이라 판단하였다.
+
+
+
+#### type method v.s. instance method
+
+완성된 코드에서 채택한 것은 static을 통한 type method의 사용이다. 계산기 사용시마다 instance를 만들지 않아도 되므로 관리하는 측면에서 더 효율적이지만, 피연산자들을 프로퍼티로 저장할 수 없기 때문에 모든 메서드마다 동일한 로직이 들어가게 되었다.
+
+```swift
+static func add(firstNumber: String, secondNumber: String) -> String {
+    do {
+        let first = try formatInput(firstNumber)
+        let second = try formatInput(secondNumber)
+        let result = first + second
+        return try formatResult(of: result)
+    } catch {
+        return "ERROR"
+    }
+}
+    
+static func subtract(firstNumber: String, secondNumber: String) -> String {
+    do {
+        let first = try formatInput(firstNumber)
+        let second = try formatInput(secondNumber)
+        let result = first - second
+        return try formatResult(of: result)
+    } catch {
+        return "ERROR"
+    }
+}
+```
+
+(위의 코드처럼 first, second라는 첫번째 피연산자와 두번째 피연산자를 Double로 바꿔주는 로직이 중복되는 것을 볼 수 있다.)
+
+이를 해결해보기 위해 고민을 해보았지만 Calculator 클래스를 사용하는 입장의 편의성을 위해서 이대로 두는 것이 낫다는 결론을 내렸다. 
+
+
+
+#### Error 발생시에 어떻게 처리할 것인가
+
+사용자가 누를 수 있는 버튼이 정해져있고, 오직 숫자값만이 입력으로 들어오는 것이 보장되어있으니, String -> Double의 전환시에 error catch를 하지 않아도 되지 않느냐? 라는 의견이 있었고,
+
+반대로 그것은 클라이언트 (계산기 로직을 사용하는) 쪽에서 케어를 해줘야 할 부분이 늘어나는 것이므로 계산기 클래스를 구현하는 입장에서는 번거롭더라도 strict하게 가는 것이 맞다. 와 같은 의견이 있었다.
+
+둘 모두 일리있는 의견이었지만, 우리 팀이 선택한 의견은 후자였으며 이로 인해 input과 output을 formatting 하는 로직에서 error throwing이 발생했다.
